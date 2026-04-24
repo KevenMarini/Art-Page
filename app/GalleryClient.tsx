@@ -57,7 +57,7 @@ export default function GalleryClient({ artworks }: { artworks: Artwork[] }) {
 
   return (
     <>
-      <section id="gallery" className="reveal">
+      <section id="gallery">
         {renderSection('Featured Artwork', null, featured)}
         <br /><br /><br />
         {renderSection('Initial Works', 'These works represent my early learning phase and experimentation with form and shadow.', initial)}
