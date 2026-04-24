@@ -27,6 +27,10 @@ export async function DELETE(request: Request) {
     // 2. Delete from Postgres
     await deleteArtwork(parseInt(id));
 
+    // 3. Clear homepage cache
+    const { revalidatePath } = await import('next/cache');
+    revalidatePath('/');
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Delete error:', error);

@@ -29,6 +29,10 @@ export async function POST(request: Request): Promise<NextResponse> {
       category,
     });
 
+    // 3. Clear homepage cache
+    const { revalidatePath } = await import('next/cache');
+    revalidatePath('/');
+
     return NextResponse.json({ url: blob.url });
   } catch (error) {
     console.error('Upload error:', error);

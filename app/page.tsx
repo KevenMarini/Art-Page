@@ -1,7 +1,9 @@
 import { getArtworks } from '@/lib/db';
 import GalleryClient from './GalleryClient';
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function Home() {
   const artworks = await getArtworks();
