@@ -33,6 +33,7 @@ const INITIAL_ARTWORKS = [
 export async function GET() {
   try {
     await initDb();
+    await clearArtworks(); // Wipe database first
     
     for (const art of INITIAL_ARTWORKS) {
       await addArtwork(art as any);

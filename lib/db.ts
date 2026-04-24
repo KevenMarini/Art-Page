@@ -41,3 +41,7 @@ export async function addArtwork(artwork: Omit<Artwork, 'id' | 'created_at'>) {
 export async function deleteArtwork(id: number) {
   await sql`DELETE FROM artworks WHERE id = ${id}`;
 }
+
+export async function clearArtworks() {
+  await sql`DELETE FROM artworks`;
+}
