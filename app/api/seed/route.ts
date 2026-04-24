@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { addArtwork, initDb } from '@/lib/db';
+import { addArtwork, initDb, clearArtworks } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
 const INITIAL_ARTWORKS = [
