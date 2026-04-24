@@ -33,7 +33,7 @@ export default function GalleryClient({ artworks }: { artworks: Artwork[] }) {
   const renderSection = (title: string, desc: string | null, items: Artwork[]) => {
     if (items.length === 0) return null;
     return (
-      <section className="reveal">
+      <section style={{ opacity: 1 }}>
         <h2>{title}</h2>
         {desc && <p className="desc">{desc}</p>}
         <div className="grid">
