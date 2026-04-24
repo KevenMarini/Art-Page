@@ -21,8 +21,14 @@ export async function initDb() {
 }
 
 export async function getArtworks() {
-  const { rows } = await sql<Artwork>`SELECT * FROM artworks ORDER BY created_at DESC`;
-  return rows;
+  try {
+    await initDb(); // Ensure table exists
+    const { rows } = await sql<Artwork>`SELECT * FROM artworks ORDER BY created_at DESC`;
+    return rows;
+  } catch (error) {
+    console.error('Database fetch error:', error);
+    return []; // Return empty array if table is just being created
+  }
 }
 
 export async function addArtwork(artwork: Omit<Artwork, 'id' | 'created_at'>) {
