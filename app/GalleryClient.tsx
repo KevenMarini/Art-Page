@@ -143,7 +143,7 @@ export default function GalleryClient({
                   className={`card-like-btn ${isLiking ? 'loading' : ''} ${userLikes.includes(art.id!) ? 'liked' : ''}`}
                   onClick={(e) => handleLike(e, art.id!)}
                 >
-                  <Heart size={18} fill={userLikes.includes(art.id!) ? "var(--accent)" : "none"} stroke={userLikes.includes(art.id!) ? "var(--accent)" : "currentColor"} />
+                  <Heart size={18} />
                   <span>{likes[art.id!] || 0}</span>
                 </button>
                 <button className="card-comment-btn" onClick={() => setSelectedArtwork(art)}>
@@ -194,7 +194,7 @@ export default function GalleryClient({
                       className={`like-btn ${isLiking ? 'loading' : ''} ${userLikes.includes(selectedArtwork.id!) ? 'liked' : ''}`}
                       onClick={(e) => handleLike(e, selectedArtwork.id!)}
                     >
-                      <Heart size={20} fill={userLikes.includes(selectedArtwork.id!) ? "var(--accent)" : "none"} stroke={userLikes.includes(selectedArtwork.id!) ? "var(--accent)" : "currentColor"} />
+                      <Heart size={20} />
                       <span>{likes[selectedArtwork.id!] || 0}</span>
                     </button>
                     <div className="comment-count">
@@ -211,7 +211,7 @@ export default function GalleryClient({
                       className={`like-btn ${isLiking ? 'loading' : ''} ${userLikes.includes(selectedArtwork.id!) ? 'liked' : ''}`}
                       onClick={(e) => handleLike(e, selectedArtwork.id!)}
                     >
-                      <Heart size={20} fill={userLikes.includes(selectedArtwork.id!) ? "var(--accent)" : "none"} stroke={userLikes.includes(selectedArtwork.id!) ? "var(--accent)" : "currentColor"} />
+                      <Heart size={20} />
                       <span>{likes[selectedArtwork.id!] || 0}</span>
                     </button>
                     <div className="comment-count">
