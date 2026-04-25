@@ -20,6 +20,15 @@ export default function GalleryClient({
   const [commentText, setCommentText] = useState('');
   const [isLiking, setIsLiking] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false);
+  const [userLikes, setUserLikes] = useState<number[]>([]);
+
+  useEffect(() => {
+    // Load user's previous likes from localStorage
+    const savedLikes = localStorage.getItem('itz_only_art_likes');
+    if (savedLikes) {
+      setUserLikes(JSON.parse(savedLikes));
+    }
+  }, []);
 
   useEffect(() => {
     const reveal = () => {
@@ -51,7 +60,7 @@ export default function GalleryClient({
 
   const handleLike = async (e: React.MouseEvent, artworkId: number) => {
     e.stopPropagation();
-    if (isLiking) return;
+    if (isLiking || userLikes.includes(artworkId)) return;
     setIsLiking(true);
     try {
       const res = await fetch('/api/like', {
@@ -62,6 +71,9 @@ export default function GalleryClient({
       const data = await res.json();
       if (data.success) {
         setLikes(prev => ({ ...prev, [artworkId]: (prev[artworkId] || 0) + 1 }));
+        const newLikes = [...userLikes, artworkId];
+        setUserLikes(newLikes);
+        localStorage.setItem('itz_only_art_likes', JSON.stringify(newLikes));
       }
     } catch (err) {
       console.error('Like failed:', err);
@@ -128,10 +140,10 @@ export default function GalleryClient({
               </div>
               <div className="card-social-bar">
                 <button 
-                  className={`card-like-btn ${isLiking ? 'loading' : ''}`}
+                  className={`card-like-btn ${isLiking ? 'loading' : ''} ${userLikes.includes(art.id!) ? 'liked' : ''}`}
                   onClick={(e) => handleLike(e, art.id!)}
                 >
-                  <Heart size={18} fill={likes[art.id!] > 0 ? "var(--accent)" : "none"} stroke={likes[art.id!] > 0 ? "var(--accent)" : "currentColor"} />
+                  <Heart size={18} fill={userLikes.includes(art.id!) ? "var(--accent)" : "none"} stroke={userLikes.includes(art.id!) ? "var(--accent)" : "currentColor"} />
                   <span>{likes[art.id!] || 0}</span>
                 </button>
                 <button className="card-comment-btn" onClick={() => setSelectedArtwork(art)}>
@@ -179,10 +191,10 @@ export default function GalleryClient({
                   <h3>{selectedArtwork.title}</h3>
                   <div className="social-actions">
                     <button 
-                      className={`like-btn ${isLiking ? 'loading' : ''}`}
+                      className={`like-btn ${isLiking ? 'loading' : ''} ${userLikes.includes(selectedArtwork.id!) ? 'liked' : ''}`}
                       onClick={(e) => handleLike(e, selectedArtwork.id!)}
                     >
-                      <Heart size={20} fill={likes[selectedArtwork.id!] > 0 ? "var(--accent)" : "none"} stroke={likes[selectedArtwork.id!] > 0 ? "var(--accent)" : "currentColor"} />
+                      <Heart size={20} fill={userLikes.includes(selectedArtwork.id!) ? "var(--accent)" : "none"} stroke={userLikes.includes(selectedArtwork.id!) ? "var(--accent)" : "currentColor"} />
                       <span>{likes[selectedArtwork.id!] || 0}</span>
                     </button>
                     <div className="comment-count">
@@ -196,10 +208,10 @@ export default function GalleryClient({
                 <div className="mobile-info-bar">
                   <div className="social-actions">
                     <button 
-                      className={`like-btn ${isLiking ? 'loading' : ''}`}
+                      className={`like-btn ${isLiking ? 'loading' : ''} ${userLikes.includes(selectedArtwork.id!) ? 'liked' : ''}`}
                       onClick={(e) => handleLike(e, selectedArtwork.id!)}
                     >
-                      <Heart size={20} fill={likes[selectedArtwork.id!] > 0 ? "var(--accent)" : "none"} stroke={likes[selectedArtwork.id!] > 0 ? "var(--accent)" : "currentColor"} />
+                      <Heart size={20} fill={userLikes.includes(selectedArtwork.id!) ? "var(--accent)" : "none"} stroke={userLikes.includes(selectedArtwork.id!) ? "var(--accent)" : "currentColor"} />
                       <span>{likes[selectedArtwork.id!] || 0}</span>
                     </button>
                     <div className="comment-count">
