@@ -148,7 +148,7 @@ h2::after {
 /* GRID */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 30px;
 }
 
@@ -340,8 +340,27 @@ h2::after {
 /* RESPONSIVENESS */
 @media (max-width: 768px) {
     .nav-links { display: none; }
-    section { padding: 80px 5%; }
-    .hero h1 { font-size: 4rem; }
+    section { padding: 60px 5%; }
+    .hero h1 { font-size: 3.5rem; }
+    .grid { 
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .card-social-bar {
+        padding: 0.5rem 1rem;
+        gap: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 { font-size: 2.8rem; }
+    .visitor-count {
+        padding: 0.8rem 1.5rem;
+        gap: 0.6rem;
+    }
+    .visitor-count strong {
+        font-size: 1.2rem;
+    }
 }
 
 /* ADMIN PANEL STYLES */
