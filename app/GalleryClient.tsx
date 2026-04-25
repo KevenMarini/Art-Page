@@ -158,15 +158,42 @@ export default function GalleryClient({
 
       {selectedArtwork && (
         <div className="lightbox active" onClick={() => setSelectedArtwork(null)}>
-          <button className="lightbox-close" onClick={() => setSelectedArtwork(null)}>
+          <button className="lightbox-close desktop-only" onClick={() => setSelectedArtwork(null)}>
             <X size={32} />
           </button>
+          
           <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            {/* Mobile Header */}
+            <div className="mobile-lightbox-header">
+              <button className="back-btn" onClick={() => setSelectedArtwork(null)}>
+                <X size={24} />
+                <span>Back</span>
+              </button>
+              <div className="mobile-header-title">{selectedArtwork.title}</div>
+            </div>
+
             <div className="lightbox-main">
               <img className="lightbox-img" src={selectedArtwork.url} alt={selectedArtwork.title} />
               <div className="lightbox-info">
-                <div className="lightbox-header">
+                <div className="lightbox-header desktop-only">
                   <h3>{selectedArtwork.title}</h3>
+                  <div className="social-actions">
+                    <button 
+                      className={`like-btn ${isLiking ? 'loading' : ''}`}
+                      onClick={(e) => handleLike(e, selectedArtwork.id!)}
+                    >
+                      <Heart size={20} fill={likes[selectedArtwork.id!] > 0 ? "var(--accent)" : "none"} stroke={likes[selectedArtwork.id!] > 0 ? "var(--accent)" : "currentColor"} />
+                      <span>{likes[selectedArtwork.id!] || 0}</span>
+                    </button>
+                    <div className="comment-count">
+                      <MessageSquare size={20} />
+                      <span>{comments.length}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mobile Title & Actions (Integrated) */}
+                <div className="mobile-info-bar">
                   <div className="social-actions">
                     <button 
                       className={`like-btn ${isLiking ? 'loading' : ''}`}
