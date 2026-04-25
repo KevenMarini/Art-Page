@@ -948,3 +948,122 @@ select.box {
         height: 45px;
     }
 }
+
+/* PROMO POPUP */
+.promo-popup {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 1000;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: 16px;
+    padding: 1.5rem;
+    max-width: 320px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 20px var(--accent-glow);
+    animation: slideUpFade 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.promo-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.promo-close:hover {
+    color: var(--text);
+    transform: scale(1.1);
+}
+
+.promo-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.promo-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+}
+
+.promo-icon {
+    color: var(--accent);
+}
+
+.promo-header h4 {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.promo-content p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin: 0;
+}
+
+.promo-links {
+    display: flex;
+    gap: 10px;
+    margin-top: 0.5rem;
+}
+
+.promo-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+}
+
+.promo-btn:hover {
+    transform: translateY(-2px);
+}
+
+.promo-btn.instagram:hover {
+    background: rgba(225, 48, 108, 0.1);
+    border-color: #E1306C;
+    color: #E1306C;
+}
+
+.promo-btn.linkedin:hover {
+    background: rgba(0, 119, 181, 0.1);
+    border-color: #0077b5;
+    color: #0077b5;
+}
+
+@media (max-width: 768px) {
+    .promo-popup {
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        max-width: calc(100vw - 40px);
+    }
+}

@@ -2,6 +2,7 @@ import { getArtworks, getVisitorCount, incrementVisitorCount, getUserLikes } fro
 import { headers } from 'next/headers';
 import GalleryClient from './GalleryClient';
 import FloatingSocials from './FloatingSocials';
+import PromoPopup from './PromoPopup';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -78,6 +79,7 @@ export default async function Home() {
         </div>
       </section>
       <FloatingSocials />
+      <PromoPopup />
     </main>
   );
 }
