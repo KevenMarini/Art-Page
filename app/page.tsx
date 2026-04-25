@@ -5,8 +5,8 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function Home() {
+  const artworks = await getArtworks(); // This calls initDb() and ensures tables exist
   await incrementVisitorCount();
-  const artworks = await getArtworks();
   const visitorCount = await getVisitorCount();
 
   return (
