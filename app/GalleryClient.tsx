@@ -6,10 +6,12 @@ import { Heart, MessageSquare, Send, User, X } from 'lucide-react';
 
 export default function GalleryClient({ 
   artworks, 
-  visitorCount 
+  visitorCount,
+  initialUserLikes = []
 }: { 
   artworks: Artwork[], 
-  visitorCount: number 
+  visitorCount: number,
+  initialUserLikes?: number[]
 }) {
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [likes, setLikes] = useState<{ [key: number]: number }>(
@@ -20,15 +22,17 @@ export default function GalleryClient({
   const [commentText, setCommentText] = useState('');
   const [isLiking, setIsLiking] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false);
-  const [userLikes, setUserLikes] = useState<number[]>([]);
+  const [userLikes, setUserLikes] = useState<number[]>(initialUserLikes);
 
   useEffect(() => {
-    // Load user's previous likes from localStorage
+    // Load user's previous likes from localStorage and merge with DB likes
     const savedLikes = localStorage.getItem('itz_only_art_likes');
     if (savedLikes) {
-      setUserLikes(JSON.parse(savedLikes));
+      const localLikes = JSON.parse(savedLikes);
+      const merged = Array.from(new Set([...initialUserLikes, ...localLikes]));
+      setUserLikes(merged);
     }
-  }, []);
+  }, [initialUserLikes]);
 
   useEffect(() => {
     const reveal = () => {

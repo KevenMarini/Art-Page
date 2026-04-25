@@ -93,6 +93,11 @@ export async function addLike(artworkId: number, ip: string) {
   return false;
 }
 
+export async function getUserLikes(ip: string) {
+  const { rows } = await sql`SELECT artwork_id FROM likes WHERE ip = ${ip}`;
+  return rows.map(row => row.artwork_id as number);
+}
+
 export async function addComment(artworkId: number, name: string, text: string) {
   await sql`
     INSERT INTO comments (artwork_id, name, text)

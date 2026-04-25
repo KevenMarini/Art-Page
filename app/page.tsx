@@ -1,4 +1,5 @@
-import { getArtworks, incrementVisitorCount, getVisitorCount } from '@/lib/db';
+import { getArtworks, getVisitorCount, incrementVisitorCount, getUserLikes } from '@/lib/db';
+import { headers } from 'next/headers';
 import GalleryClient from './GalleryClient';
 
 export const dynamic = 'force-dynamic';
@@ -8,6 +9,11 @@ export default async function Home() {
   const artworks = await getArtworks(); // This calls initDb() and ensures tables exist
   await incrementVisitorCount();
   const visitorCount = await getVisitorCount();
+  
+  const headersList = headers();
+  const forwarded = headersList.get('x-forwarded-for');
+  const ip = forwarded ? forwarded.split(',')[0] : 'unknown';
+  const initialUserLikes = await getUserLikes(ip);
 
   return (
     <main>
