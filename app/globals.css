@@ -727,12 +727,19 @@ select.box {
     
     .lightbox-info {
         min-width: 0;
-        padding: 1.5rem;
+        padding: 1.2rem;
         flex: none;
+        gap: 1rem;
+    }
+
+    .lightbox-header {
+        margin-bottom: 1rem;
     }
     
     .comment-section {
-        max-height: 400px;
+        max-height: 350px;
+        gap: 1rem;
+        margin-top: 0.5rem;
     }
 
     .lightbox-header h3 {
