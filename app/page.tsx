@@ -9,7 +9,6 @@ export const revalidate = 0;
 
 export default async function Home() {
   const artworks = await getArtworks(); // This calls initDb() and ensures tables exist
-  await incrementVisitorCount();
   const visitorCount = await getVisitorCount();
   
   const headersList = headers();

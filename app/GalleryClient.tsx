@@ -23,6 +23,22 @@ export default function GalleryClient({
   const [isLiking, setIsLiking] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false);
   const [userLikes, setUserLikes] = useState<number[]>(initialUserLikes);
+  const [currentVisitorCount, setCurrentVisitorCount] = useState(visitorCount);
+
+  useEffect(() => {
+    // Only increment visitor count once per session
+    if (!sessionStorage.getItem('itz_only_art_visited')) {
+      sessionStorage.setItem('itz_only_art_visited', 'true');
+      fetch('/api/visit', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.count) {
+            setCurrentVisitorCount(data.count);
+          }
+        })
+        .catch(err => console.error('Error tracking visit:', err));
+    }
+  }, []);
 
   useEffect(() => {
     // Load user's previous likes from localStorage and merge with DB likes
@@ -324,7 +340,7 @@ export default function GalleryClient({
       <footer className="visitor-footer">
         <div className="visitor-count">
           <span>Total Visitors:</span>
-          <strong>{visitorCount.toLocaleString()}</strong>
+          <strong>{currentVisitorCount.toLocaleString()}</strong>
         </div>
         <p>&copy; {new Date().getFullYear()} Keven Marini. All Rights Reserved.</p>
       </footer>
