@@ -109,6 +109,21 @@ export async function getComments(artworkId: number) {
   return rows;
 }
 
+export async function addArtwork(artwork: Omit<Artwork, 'id' | 'created_at' | 'likes_count'>) {
+  await sql`
+    INSERT INTO artworks (title, url, category)
+    VALUES (${artwork.title}, ${artwork.url}, ${artwork.category})
+  `;
+}
+
+export async function deleteArtwork(id: number) {
+  await sql`DELETE FROM artworks WHERE id = ${id}`;
+}
+
+export async function clearArtworks() {
+  await sql`DELETE FROM artworks`;
+}
+
 export async function incrementVisitorCount() {
   await sql`
     UPDATE stats SET value = value + 1 WHERE key = 'visitor_count'
