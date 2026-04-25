@@ -1,12 +1,13 @@
-import { getArtworks } from '@/lib/db';
+import { getArtworks, incrementVisitorCount, getVisitorCount } from '@/lib/db';
 import GalleryClient from './GalleryClient';
-import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function Home() {
+  await incrementVisitorCount();
   const artworks = await getArtworks();
+  const visitorCount = await getVisitorCount();
 
   return (
     <main>
@@ -34,7 +35,7 @@ export default async function Home() {
         </p>
       </section>
 
-      <GalleryClient artworks={artworks} />
+      <GalleryClient artworks={artworks} visitorCount={visitorCount} />
 
       <section id="contact" className="contact reveal">
         <h2>Share Your Thoughts</h2>

@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { addArtwork, initDb, clearArtworks } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
+export const dynamic = 'force-dynamic';
+
 const INITIAL_ARTWORKS = [
   { url: '/ArtPhotos/WhatsApp Image 2025-05-03 at 11.05.06_f1f3be12.jpg', title: 'Elephant Study', category: 'Featured' },
   { url: '/ArtPhotos/3.jpg', title: 'Elegance in Lines', category: 'Initial' },
