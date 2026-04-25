@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Artwork, Comment } from '@/lib/db';
-import { Heart, MessageSquare, Send, User, X } from 'lucide-react';
+import { Heart, MessageSquare, Send, User, X, Share2 } from 'lucide-react';
 
 export default function GalleryClient({ 
   artworks, 
@@ -34,6 +34,18 @@ export default function GalleryClient({
     }
   }, [initialUserLikes]);
 
+  // Deep-linking: check URL for ?artwork=ID to auto-open lightbox
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const artworkId = searchParams.get('artwork');
+    if (artworkId && artworks.length > 0) {
+      const art = artworks.find(a => a.id === Number(artworkId));
+      if (art) {
+        setSelectedArtwork(art);
+      }
+    }
+  }, [artworks]);
+
   useEffect(() => {
     const reveal = () => {
       const reveals = document.querySelectorAll('.reveal');
@@ -61,6 +73,30 @@ export default function GalleryClient({
         .catch(err => console.error('Error fetching comments:', err));
     }
   }, [selectedArtwork]);
+
+  const handleShare = async (e: React.MouseEvent, artwork: Artwork) => {
+    e.stopPropagation();
+    const shareUrl = `${window.location.origin}?artwork=${artwork.id}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: artwork.title,
+          text: `Check out "${artwork.title}" by Keven Marini!`,
+          url: shareUrl,
+        });
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        alert('Link copied to clipboard!');
+      } catch (err) {
+        console.error('Error copying link:', err);
+      }
+    }
+  };
 
   const handleLike = async (e: React.MouseEvent, artworkId: number) => {
     e.stopPropagation();
@@ -153,6 +189,9 @@ export default function GalleryClient({
                 <button className="card-comment-btn" onClick={() => setSelectedArtwork(art)}>
                   <MessageSquare size={18} />
                 </button>
+                <button className="card-share-btn" onClick={(e) => handleShare(e, art)}>
+                  <Share2 size={18} />
+                </button>
               </div>
             </div>
           ))}
@@ -205,6 +244,10 @@ export default function GalleryClient({
                       <MessageSquare size={20} />
                       <span>{comments.length}</span>
                     </div>
+                    <button className="like-btn" onClick={(e) => handleShare(e, selectedArtwork)}>
+                      <Share2 size={20} />
+                      <span>Share</span>
+                    </button>
                   </div>
                 </div>
 
@@ -222,6 +265,9 @@ export default function GalleryClient({
                       <MessageSquare size={20} />
                       <span>{comments.length}</span>
                     </div>
+                    <button className="like-btn" onClick={(e) => handleShare(e, selectedArtwork)}>
+                      <Share2 size={20} />
+                    </button>
                   </div>
                 </div>
 

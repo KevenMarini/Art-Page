@@ -416,7 +416,7 @@ select.box {
     background: rgba(167, 139, 250, 0.05);
 }
 
-.card-like-btn, .card-comment-btn {
+.card-like-btn, .card-comment-btn, .card-share-btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -428,7 +428,7 @@ select.box {
     transition: var(--transition);
 }
 
-.card-like-btn:hover, .card-comment-btn:hover {
+.card-like-btn:hover, .card-comment-btn:hover, .card-share-btn:hover {
     color: var(--accent);
 }
 
