@@ -115,20 +115,28 @@ export default function GalleryClient({
         {desc && <p className="desc">{desc}</p>}
         <div className="grid">
           {items.map((art) => (
-            <div 
-              key={art.id} 
-              className="card" 
-              onClick={() => setSelectedArtwork(art)}
-            >
-              <img src={art.url} alt={art.title} loading="lazy" />
-              <div className="overlay">
-                <span>{art.category}</span>
-                <h3>{art.title}</h3>
-                <div className="card-stats">
-                  <span className="stat-item">
-                    <Heart size={16} fill="white" /> {likes[art.id!] || 0}
-                  </span>
+            <div key={art.id} className="card-container">
+              <div 
+                className="card" 
+                onClick={() => setSelectedArtwork(art)}
+              >
+                <img src={art.url} alt={art.title} loading="lazy" />
+                <div className="overlay">
+                  <span>{art.category}</span>
+                  <h3>{art.title}</h3>
                 </div>
+              </div>
+              <div className="card-social-bar">
+                <button 
+                  className={`card-like-btn ${isLiking ? 'loading' : ''}`}
+                  onClick={(e) => handleLike(e, art.id!)}
+                >
+                  <Heart size={18} fill={likes[art.id!] > 0 ? "var(--accent)" : "none"} stroke={likes[art.id!] > 0 ? "var(--accent)" : "currentColor"} />
+                  <span>{likes[art.id!] || 0}</span>
+                </button>
+                <button className="card-comment-btn" onClick={() => setSelectedArtwork(art)}>
+                  <MessageSquare size={18} />
+                </button>
               </div>
             </div>
           ))}
