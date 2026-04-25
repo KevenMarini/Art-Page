@@ -861,7 +861,7 @@ select.box {
     right: 30px;
     z-index: 1000;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     align-items: center;
     gap: 15px;
 }
