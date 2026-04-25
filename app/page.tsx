@@ -1,6 +1,7 @@
 import { getArtworks, getVisitorCount, incrementVisitorCount, getUserLikes } from '@/lib/db';
 import { headers } from 'next/headers';
 import GalleryClient from './GalleryClient';
+import FloatingSocials from './FloatingSocials';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -24,6 +25,7 @@ export default async function Home() {
           <a href="#gallery">Gallery</a>
           <a href="#contact">Contact</a>
           <a href="https://instagram.com/m.keven_art" target="_blank" style={{ color: 'var(--accent)' }}>Instagram</a>
+          <a href="https://www.linkedin.com/in/kevenmarini/" target="_blank" style={{ color: 'var(--accent)' }}>LinkedIn</a>
         </div>
       </nav>
 
@@ -47,10 +49,16 @@ export default async function Home() {
         <h2>Share Your Thoughts</h2>
         <p className="desc">Have a suggestion or a question? I'd love to hear from you.</p>
 
-        <a href="https://instagram.com/m.keven_art" target="_blank" className="insta-link"
-          style={{ marginTop: 0, marginBottom: '2rem' }}>
-          Follow on Instagram @m.keven_art
-        </a>
+        <div className="social-links-container" style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
+          <a href="https://instagram.com/m.keven_art" target="_blank" className="insta-link"
+            style={{ marginTop: 0 }}>
+            Follow on Instagram @m.keven_art
+          </a>
+          <a href="https://www.linkedin.com/in/kevenmarini/" target="_blank" className="insta-link"
+            style={{ marginTop: 0 }}>
+            Connect on LinkedIn
+          </a>
+        </div>
 
         <div className="suggestion-box">
           <form action="https://formspree.io/f/xblokoye" method="POST">
@@ -69,6 +77,7 @@ export default async function Home() {
           </form>
         </div>
       </section>
+      <FloatingSocials />
     </main>
   );
 }
