@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Artwork } from '@/lib/db';
+import { Artwork, Comment } from '@/lib/db';
 
 export default function AdminPage() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
@@ -12,9 +12,12 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [message, setMessage] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [filterCategory, setFilterCategory] = useState('All');
+  const [expandedComments, setExpandedComments] = useState<number[]>([]);
+  const [commentsData, setCommentsData] = useState<Record<number, Comment[]>>({});
   const router = useRouter();
 
   useEffect(() => {
@@ -35,11 +38,42 @@ export default function AdminPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Default is 'admin' for now.
-    if (password === 'admin') {
+    if (username === 'itsonlyart' && password === '1bro23&*') {
       setIsAuthorized(true);
     } else {
-      alert('Incorrect password. Try "admin"');
+      alert('Incorrect username or password.');
+    }
+  };
+
+  const toggleComments = async (artworkId: number) => {
+    if (expandedComments.includes(artworkId)) {
+      setExpandedComments(prev => prev.filter(id => id !== artworkId));
+    } else {
+      setExpandedComments(prev => [...prev, artworkId]);
+      try {
+        const res = await fetch(`/api/comment?artworkId=${artworkId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setCommentsData(prev => ({ ...prev, [artworkId]: data }));
+        }
+      } catch (error) {
+        console.error('Failed to fetch comments', error);
+      }
+    }
+  };
+
+  const handleDeleteComment = async (commentId: number, artworkId: number) => {
+    if (!confirm('Are you sure you want to delete this comment?')) return;
+    try {
+      const res = await fetch(`/api/comment?id=${commentId}`, { method: 'DELETE' });
+      if (res.ok) {
+        setCommentsData(prev => ({
+          ...prev,
+          [artworkId]: prev[artworkId].filter(c => c.id !== commentId)
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to delete comment', error);
     }
   };
 
@@ -105,6 +139,15 @@ export default function AdminPage() {
       <div className="admin-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
         <form onSubmit={handleLogin} className="admin-form" style={{ width: '100%', maxWidth: '400px' }}>
           <h3 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Admin Login</h3>
+          <input 
+            type="text" 
+            className="box" 
+            placeholder="Enter Username" 
+            value={username} 
+            onChange={(e) => setUsername(e.target.value)} 
+            required 
+            style={{ marginBottom: '1rem' }}
+          />
           <input 
             type="password" 
             className="box" 
@@ -186,34 +229,91 @@ export default function AdminPage() {
             filteredArtworks.map((art) => (
               <div key={art.id} style={{ 
                 display: 'flex', 
-                alignItems: 'center', 
+                flexDirection: 'column',
                 gap: '1rem', 
                 background: 'rgba(255,255,255,0.02)', 
                 padding: '1rem', 
                 borderRadius: '15px',
                 border: '1px solid var(--glass-border)'
               }}>
-                <img src={art.url} alt={art.title} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }} />
-                <div style={{ flex: 1 }}>
-                  <h4 style={{ fontSize: '1rem' }}>{art.title}</h4>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>{art.category}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <img src={art.url} alt={art.title} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }} />
+                  <div style={{ flex: 1 }}>
+                    <h4 style={{ fontSize: '1rem' }}>{art.title}</h4>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--accent)', marginRight: '1rem' }}>{art.category}</span>
+                    <span style={{ fontSize: '0.8rem', color: 'white' }}>❤️ {art.likes_count || 0} Likes</span>
+                  </div>
+                  <button 
+                    onClick={() => art.id && toggleComments(art.id)}
+                    style={{ 
+                      background: 'rgba(255, 255, 255, 0.1)', 
+                      color: 'white', 
+                      border: '1px solid rgba(255, 255, 255, 0.2)', 
+                      padding: '0.5rem 1rem', 
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      fontSize: '0.8rem',
+                      fontWeight: '600',
+                      marginRight: '0.5rem'
+                    }}
+                  >
+                    {art.id && expandedComments.includes(art.id) ? 'Hide Comments' : 'View Comments'}
+                  </button>
+                  <button 
+                    onClick={() => art.id && handleDelete(art.id, art.url)}
+                    disabled={deletingId === art.id}
+                    style={{ 
+                      background: 'rgba(239, 68, 68, 0.1)', 
+                      color: '#ef4444', 
+                      border: '1px solid rgba(239, 68, 68, 0.2)', 
+                      padding: '0.5rem 1rem', 
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      fontSize: '0.8rem',
+                      fontWeight: '600'
+                    }}
+                  >
+                    {deletingId === art.id ? '...' : 'Delete Artwork'}
+                  </button>
                 </div>
-                <button 
-                  onClick={() => art.id && handleDelete(art.id, art.url)}
-                  disabled={deletingId === art.id}
-                  style={{ 
-                    background: 'rgba(239, 68, 68, 0.1)', 
-                    color: '#ef4444', 
-                    border: '1px solid rgba(239, 68, 68, 0.2)', 
-                    padding: '0.5rem 1rem', 
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontSize: '0.8rem',
-                    fontWeight: '600'
-                  }}
-                >
-                  {deletingId === art.id ? '...' : 'Delete'}
-                </button>
+                
+                {art.id && expandedComments.includes(art.id) && (
+                  <div style={{ paddingLeft: '76px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <h5 style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>Comments</h5>
+                    {(!commentsData[art.id] || commentsData[art.id].length === 0) ? (
+                      <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)' }}>No comments yet.</p>
+                    ) : (
+                      commentsData[art.id].map(comment => (
+                        <div key={comment.id} style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          background: 'rgba(0,0,0,0.2)',
+                          padding: '0.5rem',
+                          borderRadius: '8px'
+                        }}>
+                          <div>
+                            <strong style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>{comment.name}</strong>
+                            <p style={{ fontSize: '0.8rem', margin: 0 }}>{comment.text}</p>
+                          </div>
+                          <button 
+                            onClick={() => art.id && handleDeleteComment(comment.id, art.id)}
+                            style={{ 
+                              background: 'transparent', 
+                              color: '#ef4444', 
+                              border: 'none', 
+                              cursor: 'pointer',
+                              fontSize: '0.8rem',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
               </div>
             ))
           )}

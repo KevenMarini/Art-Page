@@ -29,3 +29,19 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to fetch comments' }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+    if (!id) {
+      return NextResponse.json({ error: 'id is required' }, { status: 400 });
+    }
+    const { deleteComment } = await import('@/lib/db');
+    await deleteComment(parseInt(id));
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Delete comment error:', error);
+    return NextResponse.json({ error: 'Failed to delete comment' }, { status: 500 });
+  }
+}

@@ -139,3 +139,7 @@ export async function getVisitorCount() {
   const { rows } = await sql`SELECT value FROM stats WHERE key = 'visitor_count'`;
   return rows[0]?.value || 0;
 }
+
+export async function deleteComment(id: number) {
+  await sql`DELETE FROM comments WHERE id = ${id}`;
+}
