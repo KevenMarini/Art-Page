@@ -432,6 +432,10 @@ select.box {
     color: var(--accent);
 }
 
+.card-like-btn.liked {
+    color: var(--accent);
+}
+
 .card-like-btn.loading {
     opacity: 0.5;
 }
@@ -515,6 +519,12 @@ select.box {
     border-color: var(--accent);
     background: var(--accent-glow);
     transform: translateY(-2px);
+}
+
+.like-btn.liked {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-glow);
 }
 
 .like-btn.loading {
