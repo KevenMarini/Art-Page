@@ -7,21 +7,15 @@ export default function PromoPopup() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Check if the user has dismissed the popup before
-    const hasDismissed = localStorage.getItem('itz_only_art_promo_dismissed');
-    
-    // Show popup after 3 seconds if not dismissed
-    if (!hasDismissed) {
-      const timer = setTimeout(() => {
-        setIsVisible(true);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
+    // Show popup after 3 seconds
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 3000);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleClose = () => {
     setIsVisible(false);
-    localStorage.setItem('itz_only_art_promo_dismissed', 'true');
   };
 
   if (!isVisible) return null;
