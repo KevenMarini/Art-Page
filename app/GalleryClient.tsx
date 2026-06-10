@@ -224,10 +224,7 @@ export default function GalleryClient({
           else if (cat.name === 'Pro') desc = 'Artworks showcasing refined techniques, improved detailing, and professional composition.';
           else if (cat.name === 'Elite') desc = 'My most refined and impactful works, representing the peak of my current technique.';
 
-          const sectionTitle = cat.name === 'Featured' ? 'Featured Artwork' : 
-                               cat.name === 'Initial' ? 'Initial Works' :
-                               cat.name === 'Pro' ? 'Professional Works' :
-                               cat.name === 'Elite' ? 'Masterpieces' : cat.name;
+          const sectionTitle = cat.name;
 
           return (
             <div key={cat.id}>
