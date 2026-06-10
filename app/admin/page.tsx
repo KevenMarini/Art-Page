@@ -134,15 +134,15 @@ export default function AdminPage() {
     const newCats = [...categories];
     const targetIndex = direction === 'up' ? index - 1 : index + 1;
     
-    // Swap positions
-    const tempPos = newCats[index].position;
-    newCats[index].position = newCats[targetIndex].position;
-    newCats[targetIndex].position = tempPos;
-    
-    // Swap array order for optimistic UI
+    // Swap array order
     const temp = newCats[index];
     newCats[index] = newCats[targetIndex];
     newCats[targetIndex] = temp;
+    
+    // Re-index all to ensure uniqueness
+    newCats.forEach((cat, idx) => {
+      cat.position = idx;
+    });
     
     setCategories(newCats);
 
@@ -151,10 +151,7 @@ export default function AdminPage() {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items: [
-            { id: newCats[index].id, position: newCats[index].position },
-            { id: newCats[targetIndex].id, position: newCats[targetIndex].position }
-          ]
+          items: newCats.map(cat => ({ id: cat.id, position: cat.position }))
         })
       });
     } catch (error) {
@@ -229,23 +226,28 @@ export default function AdminPage() {
 
     const targetIndex = direction === 'up' ? index - 1 : index + 1;
     
-    const art1 = categoryArtworks[index];
-    const art2 = categoryArtworks[targetIndex];
+    // Create a mutable copy of the category artworks
+    const newCatArtworks = [...categoryArtworks];
     
-    // Calculate fallback positions if undefined
-    const pos1 = art1.position ?? index;
-    const pos2 = art2.position ?? targetIndex;
+    // Swap in array
+    const temp = newCatArtworks[index];
+    newCatArtworks[index] = newCatArtworks[targetIndex];
+    newCatArtworks[targetIndex] = temp;
+    
+    // Now assign new positions based on array order to guarantee uniqueness
+    const updates = newCatArtworks.map((art, idx) => ({ id: art.id, position: idx }));
     
     try {
-      // Optimitic update
-      const newArtworks = [...artworks];
-      const fullIdx1 = newArtworks.findIndex(a => a.id === art1.id);
-      const fullIdx2 = newArtworks.findIndex(a => a.id === art2.id);
+      // Update local state
+      const newArtworks = artworks.map(art => {
+        if (art.category === selectedCategory) {
+          const updated = updates.find(u => u.id === art.id);
+          return updated ? { ...art, position: updated.position } : art;
+        }
+        return art;
+      });
       
-      newArtworks[fullIdx1].position = pos2;
-      newArtworks[fullIdx2].position = pos1;
-      
-      // Re-sort locally
+      // Sort locally
       newArtworks.sort((a, b) => {
         if (a.category !== b.category) return 0;
         return (a.position ?? 0) - (b.position ?? 0);
@@ -256,12 +258,7 @@ export default function AdminPage() {
       await fetch('/api/artwork/reorder', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: [
-            { id: art1.id, position: pos2 },
-            { id: art2.id, position: pos1 }
-          ]
-        })
+        body: JSON.stringify({ items: updates })
       });
     } catch (error) {
       console.error('Failed to reorder artworks:', error);
