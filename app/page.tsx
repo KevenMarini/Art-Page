@@ -1,4 +1,4 @@
-import { getArtworks, getVisitorCount, incrementVisitorCount, getUserLikes } from '@/lib/db';
+import { getArtworks, getVisitorCount, incrementVisitorCount, getUserLikes, getCategories } from '@/lib/db';
 import { headers } from 'next/headers';
 import GalleryClient from './GalleryClient';
 import FloatingSocials from './FloatingSocials';
@@ -8,6 +8,7 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function Home() {
+  const categories = await getCategories();
   const artworks = await getArtworks(); // This calls initDb() and ensures tables exist
   const visitorCount = await getVisitorCount();
   
@@ -43,7 +44,7 @@ export default async function Home() {
         </p>
       </section>
 
-      <GalleryClient artworks={artworks} visitorCount={visitorCount} />
+      <GalleryClient artworks={artworks} categories={categories} visitorCount={visitorCount} initialUserLikes={initialUserLikes} />
 
       <section id="contact" className="contact reveal">
         <h2>Share Your Thoughts</h2>

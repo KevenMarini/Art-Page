@@ -1,15 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Artwork, Comment } from '@/lib/db';
+import { Artwork, Comment, Category } from '@/lib/db';
 import { Heart, MessageSquare, Send, User, X, Share2 } from 'lucide-react';
 
 export default function GalleryClient({ 
   artworks, 
+  categories,
   visitorCount,
   initialUserLikes = []
 }: { 
   artworks: Artwork[], 
+  categories: Category[],
   visitorCount: number,
   initialUserLikes?: number[]
 }) {
@@ -170,11 +172,6 @@ export default function GalleryClient({
     }
   };
 
-  const featured = artworks.filter(a => a.category === 'Featured');
-  const initial = artworks.filter(a => a.category === 'Initial');
-  const pro = artworks.filter(a => a.category === 'Pro');
-  const elite = artworks.filter(a => a.category === 'Elite');
-
   const renderSection = (title: string, desc: string | null, items: Artwork[]) => {
     if (items.length === 0) return null;
     return (
@@ -219,13 +216,27 @@ export default function GalleryClient({
   return (
     <>
       <section id="gallery">
-        {renderSection('Featured Artwork', null, featured)}
-        <br /><br /><br />
-        {renderSection('Initial Works', 'These works represent my early learning phase and experimentation with form and shadow.', initial)}
-      </section>
+        {categories.map((cat, idx) => {
+          const catArtworks = artworks.filter(a => a.category === cat.name);
+          
+          let desc: string | null = null;
+          if (cat.name === 'Initial') desc = 'These works represent my early learning phase and experimentation with form and shadow.';
+          else if (cat.name === 'Pro') desc = 'Artworks showcasing refined techniques, improved detailing, and professional composition.';
+          else if (cat.name === 'Elite') desc = 'My most refined and impactful works, representing the peak of my current technique.';
 
-      {renderSection('Professional Works', 'Artworks showcasing refined techniques, improved detailing, and professional composition.', pro)}
-      {renderSection('Masterpieces', 'My most refined and impactful works, representing the peak of my current technique.', elite)}
+          const sectionTitle = cat.name === 'Featured' ? 'Featured Artwork' : 
+                               cat.name === 'Initial' ? 'Initial Works' :
+                               cat.name === 'Pro' ? 'Professional Works' :
+                               cat.name === 'Elite' ? 'Masterpieces' : cat.name;
+
+          return (
+            <div key={cat.id}>
+              {renderSection(sectionTitle, desc, catArtworks)}
+              {idx === 0 && <><br /><br /><br /></>}
+            </div>
+          );
+        })}
+      </section>
 
       {selectedArtwork && (
         <div className="lightbox active" onClick={() => setSelectedArtwork(null)}>
