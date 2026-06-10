@@ -10,7 +10,7 @@ export default function FloatingSocials() {
     <div className={`fab-container ${isOpen ? 'open' : ''}`}>
       <div className="fab-menu">
         <a 
-          href="https://instagram.com/m.keven_art" 
+          href="https://www.instagram.com/_itz_only_art_?igsh=cjkyaWdzc2JwOGpt&utm_source=qr"
           target="_blank" 
           rel="noopener noreferrer" 
           className="fab-item instagram" 

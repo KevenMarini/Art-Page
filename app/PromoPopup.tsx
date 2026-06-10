@@ -35,7 +35,7 @@ export default function PromoPopup() {
         <p>I build custom web applications and portfolios. Contact me to discuss your next project!</p>
         
         <div className="promo-links">
-          <a href="https://instagram.com/m.keven_art" target="_blank" rel="noopener noreferrer" className="promo-btn instagram">
+          <a href="https://www.instagram.com/_itz_only_art_?igsh=cjkyaWdzc2JwOGpt&utm_source=qr" target="_blank" rel="noopener noreferrer" className="promo-btn instagram">
             <Instagram size={14} />
             Instagram
           </a>

@@ -25,7 +25,7 @@ export default async function Home() {
           <a href="#about">About</a>
           <a href="#gallery">Gallery</a>
           <a href="#contact">Contact</a>
-          <a href="https://instagram.com/m.keven_art" target="_blank" style={{ color: 'var(--accent)' }}>Instagram</a>
+          <a href="https://www.instagram.com/_itz_only_art_?igsh=cjkyaWdzc2JwOGpt&utm_source=qr" target="_blank" style={{ color: 'var(--accent)' }}>Instagram</a>
           <a href="https://www.linkedin.com/in/kevenmarini/" target="_blank" style={{ color: 'var(--accent)' }}>LinkedIn</a>
         </div>
       </nav>
@@ -51,9 +51,9 @@ export default async function Home() {
         <p className="desc">Have a suggestion or a question? I'd love to hear from you.</p>
 
         <div className="social-links-container" style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
-          <a href="https://instagram.com/m.keven_art" target="_blank" className="insta-link"
+          <a href="https://www.instagram.com/_itz_only_art_?igsh=cjkyaWdzc2JwOGpt&utm_source=qr" target="_blank" className="insta-link"
             style={{ marginTop: 0 }}>
-            Follow on Instagram @m.keven_art
+            Follow on Instagram @_itz_only_art_
           </a>
           <a href="https://www.linkedin.com/in/kevenmarini/" target="_blank" className="insta-link"
             style={{ marginTop: 0 }}>
