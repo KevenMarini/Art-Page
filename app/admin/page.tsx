@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Artwork, Category, Comment } from '@/lib/db';
-import { ChevronUp, ChevronDown, Trash2, Plus, ArrowLeft } from 'lucide-react';
+import { ChevronUp, ChevronDown, Trash2, Plus, ArrowLeft, Pencil } from 'lucide-react';
 
 export default function AdminPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -99,6 +99,29 @@ export default function AdminPage() {
       }
     } catch (error) {
       console.error('Failed to delete category:', error);
+    }
+  };
+
+  const handleEditCategory = async (id: number, oldName: string) => {
+    const newName = prompt(`Enter new name for category "${oldName}":`, oldName);
+    if (!newName || newName.trim() === '' || newName === oldName) return;
+    try {
+      const res = await fetch('/api/categories', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, oldName, newName: newName.trim() })
+      });
+      if (res.ok) {
+        if (selectedCategory === oldName) {
+          setSelectedCategory(newName.trim());
+        }
+        fetchCategories();
+        fetchArtworks(); // Refetch artworks because their category string changed
+      } else {
+        alert('Failed to edit category.');
+      }
+    } catch (error) {
+      console.error('Failed to update category:', error);
     }
   };
 
@@ -326,6 +349,9 @@ export default function AdminPage() {
             >
               <span style={{ fontWeight: 600 }}>{cat.name}</span>
               <div className="admin-category-actions" onClick={e => e.stopPropagation()}>
+                <button className="icon-btn" onClick={() => handleEditCategory(cat.id, cat.name)}>
+                  <Pencil size={16} />
+                </button>
                 <button className="icon-btn" onClick={() => handleReorderCategory(idx, 'up')} disabled={idx === 0}>
                   <ChevronUp size={18} />
                 </button>

@@ -127,6 +127,11 @@ export async function deleteCategory(id: number) {
   await sql`DELETE FROM categories WHERE id = ${id}`;
 }
 
+export async function updateCategoryName(id: number, oldName: string, newName: string) {
+  await sql`UPDATE categories SET name = ${newName} WHERE id = ${id}`;
+  await sql`UPDATE artworks SET category = ${newName} WHERE category = ${oldName}`;
+}
+
 export async function updateCategoryPositions(items: { id: number; position: number }[]) {
   // Simple approach: run multiple updates
   for (const item of items) {

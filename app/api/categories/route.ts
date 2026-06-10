@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getCategories, addCategory, deleteCategory } from '@/lib/db';
+import { getCategories, addCategory, deleteCategory, updateCategoryName } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -37,5 +37,18 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete category' }, { status: 500 });
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const { id, oldName, newName } = await request.json();
+    if (!id || !oldName || !newName || newName.trim() === '') {
+      return NextResponse.json({ error: 'Invalid parameters' }, { status: 400 });
+    }
+    await updateCategoryName(id, oldName, newName.trim());
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to update category' }, { status: 500 });
   }
 }
